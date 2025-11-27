@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USTP CARE - Campus Lost & Found</title>
+  <link rel="stylesheet" href="welcome.css">
+</head>
+<body>
+  <!-- Navigation header -->
+  <header class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">
+        <h1>USTP CARE</h1>
+        <p class="brand-tagline">Campus Assistance for Retrieval of Essentials</p>
+      </div>
+      <nav class="navbar-menu">
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#lost-found" class="nav-link">Lost & Found</a>
+        <a href="#categories" class="nav-link">Categories</a>
+        <a href="#dropoff" class="nav-link">Drop-off Points</a>
+      </nav>
+      <div class="navbar-actions">
+        <button class="btn-post-item" onclick="handleAction('post-item')">+ Post Item</button>
+        <button class="btn-profile" id="profileBtn">
+          <span id="userInitial">D</span>
+        </button>
+        <button class="btn-logout" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main container -->
+  <main class="main-container">
+    <!-- Welcome section -->
+    <section class="welcome-section" id="home">
+      <div class="welcome-content">
+        <h2 class="welcome-title">Welcome to <span id="userName">User</span>!</h2>
+        <p class="welcome-subtitle">USTP CARE - Your trusted campus lost and found system</p>
+        <p class="welcome-description">Help reunite lost items with their owners. Post found items, search for your lost belongings, and use our secure verification system.</p>
+      </div>
+      <div class="welcome-stats">
+        <div class="stat-card">
+          <span class="stat-number" id="totalPosts">0</span>
+          <span class="stat-label">Items Posted</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="resolvedItems">0</span>
+          <span class="stat-label">Items Resolved</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="activeUsers">0</span>
+          <span class="stat-label">Active Members</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lost & Found Section -->
+    <section class="lost-found-section" id="lost-found">
+      <h3 class="section-title">Lost & Found Items</h3>
+      
+      <!-- Filters Panel -->
+      <div class="filters-panel">
+        <div class="filter-group">
+          <label for="itemType">Item Type:</label>
+          <select id="itemType" onchange="applyFilters()">
+            <option value="">All Items</option>
+            <option value="wallet">Wallet</option>
+            <option value="id">ID/Documents</option>
+            <option value="gadgets">Gadgets</option>
+            <option value="keys">Keys</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="itemStatus">Status:</label>
+          <select id="itemStatus" onchange="applyFilters()">
+            <option value="">All</option>
+            <option value="lost">Lost</option>
+            <option value="found">Found</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="searchLocation">Location:</label>
+          <input type="text" id="searchLocation" placeholder="Search by location..." onkeyup="applyFilters()">
+        </div>
+        <button class="btn-reset-filters" onclick="resetFilters()">Reset Filters</button>
+      </div>
+
+      <!-- Items Display -->
+      <div class="items-container">
+        <div class="item-card lost-item verified">
+          <div class="item-header">
+            <span class="item-status lost">Lost</span>
+            <span class="verified-badge">✓ Verified</span>
+          </div>
+          <div class="item-image-placeholder">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M3 7.5a2 2 0 012-2h14a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2v-9z" stroke-width="2"/>
+            </svg>
+          </div>
+          <h4 class="item-name">Black Leather Wallet</h4>
+          <p class="item-category">Category: Wallet</p>
+          <p class="item-date">Posted: Nov 25, 2025</p>
+          <p class="item-location">Last seen: Near Library</p>
+          <p class="item-description">Contains student ID and credit cards. Urgent!</p>
+          <button class="btn-claim" onclick="handleAction('claim-item')">Mark as Found</button>
+        </div>
+
+        <div class="item-card found-item verified">
+          <div class="item-header">
+            <span class="item-status found">Found</span>
+            <span class="verified-badge">✓ Verified</span>
+          </div>
+          <div class="item-image-placeholder">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" stroke-width="2"/>
+            </svg>
+          </div>
+          <h4 class="item-name">Blue Student ID</h4>
+          <p class="item-category">Category: ID/Documents</p>
+          <p class="item-date">Posted: Nov 26, 2025</p>
+          <p class="item-location">Found at: Student Center</p>
+          <p class="item-description">Name visible on ID. Owner can claim at Security Office.</p>
+          <button class="btn-claim" onclick="handleAction('claim-item')">This is Mine</button>
+        </div>
+
+        <div class="item-card lost-item">
+          <div class="item-header">
+            <span class="item-status lost">Lost</span>
+          </div>
+          <div class="item-image-placeholder">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="12" cy="12" r="10" stroke-width="2"/>
+            </svg>
+          </div>
+          <h4 class="item-name">Silver Class Ring</h4>
+          <p class="item-category">Category: Jewelry</p>
+          <p class="item-date">Posted: Nov 24, 2025</p>
+          <p class="item-location">Last seen: Cafeteria</p>
+          <p class="item-description">USTP 2025 graduation ring. Reward offered.</p>
+          <button class="btn-claim" onclick="handleAction('claim-item')">Mark as Found</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories-section" id="categories">
+      <h3 class="section-title">Item Categories</h3>
+      <div class="categories-grid">
+        <div class="category-card" onclick="filterByCategory('wallet')">
+          <div class="category-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 7.5a2 2 0 012-2h14a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2v-9z"/>
+              <line x1="15" y1="9" x2="15" y2="13"/>
+            </svg>
+          </div>
+          <h4>Wallets</h4>
+          <p>23 items</p>
+        </div>
+
+        <div class="category-card" onclick="filterByCategory('id')">
+          <div class="category-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <line x1="2" y1="8" x2="22" y2="8"/>
+            </svg>
+          </div>
+          <h4>IDs & Documents</h4>
+          <p>18 items</p>
+        </div>
+
+        <div class="category-card" onclick="filterByCategory('gadgets')">
+          <div class="category-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+              <line x1="2" y1="17" x2="22" y2="17"/>
+            </svg>
+          </div>
+          <h4>Gadgets & Electronics</h4>
+          <p>15 items</p>
+        </div>
+
+        <div class="category-card" onclick="filterByCategory('keys')">
+          <div class="category-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 2l-9 9m0 0l-5 5m5-5l-2.5-2.5"/>
+              <circle cx="18" cy="9" r="2"/>
+            </svg>
+          </div>
+          <h4>Keys</h4>
+          <p>12 items</p>
+        </div>
+
+        <div class="category-card" onclick="filterByCategory('other')">
+          <div class="category-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="9"/>
+              <line x1="12" y1="8" x2="12" y2="16"/>
+              <line x1="8" y1="12" x2="16" y2="12"/>
+            </svg>
+          </div>
+          <h4>Other Items</h4>
+          <p>8 items</p>
+        </div>
+
+        <div class="category-card" onclick="handleAction('post-item')">
+          <div class="category-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </div>
+          <h4>Post New Item</h4>
+          <p>Share an item</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Drop-off Points Section -->
+    <section class="dropoff-section" id="dropoff">
+      <h3 class="section-title">Pick-up & Drop-off Points</h3>
+      <div class="dropoff-grid">
+        <div class="dropoff-card">
+          <h4>🏢 Security Office</h4>
+          <p class="dropoff-hours">Hours: 8:00 AM - 5:00 PM</p>
+          <p class="dropoff-location">Location: Main Gate Building</p>
+          <p class="dropoff-contact">Contact: 088-856-5555</p>
+          <button class="btn-navigate" onclick="handleAction('navigate')">Get Directions</button>
+        </div>
+
+        <div class="dropoff-card">
+          <h4>📚 Student Center Info Desk</h4>
+          <p class="dropoff-hours">Hours: 9:00 AM - 6:00 PM</p>
+          <p class="dropoff-location">Location: Student Center Building</p>
+          <p class="dropoff-contact">Contact: 088-856-5556</p>
+          <button class="btn-navigate" onclick="handleAction('navigate')">Get Directions</button>
+        </div>
+
+        <div class="dropoff-card">
+          <h4>📖 Library Reference Desk</h4>
+          <p class="dropoff-hours">Hours: 7:00 AM - 7:00 PM</p>
+          <p class="dropoff-location">Location: Main Library Building</p>
+          <p class="dropoff-contact">Contact: 088-856-5557</p>
+          <button class="btn-navigate" onclick="handleAction('navigate')">Get Directions</button>
+        </div>
+
+        <div class="dropoff-card">
+          <h4>🍽️ Cafeteria Help Desk</h4>
+          <p class="dropoff-hours">Hours: 10:00 AM - 4:00 PM</p>
+          <p class="dropoff-location">Location: Main Cafeteria</p>
+          <p class="dropoff-contact">Contact: 088-856-5558</p>
+          <button class="btn-navigate" onclick="handleAction('navigate')">Get Directions</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 USTP CARE - Campus Assistance for Retrieval of Essentials. All rights reserved.</p>
+  </footer>
+
+  <!-- Profile menu dropdown -->
+  <div class="profile-menu" id="profileMenu">
+    <a href="#profile" class="menu-item">View Profile</a>
+    <a href="#" class="menu-item" onclick="editProfile(); return false;">Edit Profile</a>
+    <a href="#" class="menu-item" onclick="logout(); return false;">Logout</a>
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="welcome.js"></script>
+</body>
+</html>
